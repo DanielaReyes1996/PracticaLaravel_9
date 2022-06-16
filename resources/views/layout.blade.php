@@ -25,6 +25,12 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{route('empleadoCrear')}}">Crear</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{route('empleadoEditar')}}">Editar</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{route('empleadoMostrar')}}">Mostrar</a>
+                        </li>
                     </ul>
                 </div>
             </div>

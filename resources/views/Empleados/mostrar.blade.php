@@ -1,1 +1,6 @@
-<h1><center>Mostrar-Empleados</center></h1>
+
+@extends('layout')
+@section('titulo', 'Principal')
+@section('contenido')
+<h1>Mostrar Empleados</h1>
+@endsection

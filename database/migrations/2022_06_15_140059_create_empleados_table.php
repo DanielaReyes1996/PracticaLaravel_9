@@ -18,6 +18,8 @@ return new class extends Migration
             $table->string('nombre');
             $table->string('direccion', 200);
             $table->string('email')->unique();
+            $table->integer('edad');
+            $table->integer('idCargo')->unsigned();
             $table->timestamps();
         });
     }

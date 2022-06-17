@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->integer('edad');
             $table->integer('idCargo')->unsigned();
+            $table->foreign('idCargo')->references('id')->on('cargos');
             $table->timestamps();
         });
     }

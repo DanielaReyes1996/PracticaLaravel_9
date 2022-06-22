@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+
+use App\Models\Empleado\Cargo;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -15,15 +17,15 @@ class Cargos_Seeder extends Seeder
      */
     public function run()
     {
-        DB::table('cargos')->insert([
+        Cargo::create([
             'nombre'=> 'Instructor',
         ]);
 
-        DB::table('cargos')->insert([
+        Cargo::create([
             'nombre'=> 'Director',
         ]);
 
-        DB::table('cargos')->insert([
+        Cargo::create([
             'nombre'=> 'Coordinador',
         ]);
 

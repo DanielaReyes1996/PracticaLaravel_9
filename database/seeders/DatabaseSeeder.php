@@ -3,12 +3,12 @@
 namespace Database\Seeders;
 
 
-
 use App\Models\Empleado\Cargo;
-use Database\Seeders\Empleado;
+use App\Models\Empleado\Empleado;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Database\Seeders\Cargos_Seeder;
+use Database\Seeders\Empleados_Seeder;
 
 
 class DatabaseSeeder extends Seeder
@@ -28,4 +28,3 @@ class DatabaseSeeder extends Seeder
         $this->call(Empleados_Seeder::class);
     }
 }
-

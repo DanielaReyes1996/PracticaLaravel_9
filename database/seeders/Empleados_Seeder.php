@@ -2,8 +2,7 @@
 
 namespace Database\Seeders;
 
-
-use Database\Seeders\Empleado;
+use App\Models\Empleado\Empleado;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -49,6 +48,8 @@ class Empleados_Seeder extends Seeder
             'edad' => 28,
             'idCargo' => 3
         ]);
+
+        Empleado::factory()->times(50)->create();
 
     }
 }

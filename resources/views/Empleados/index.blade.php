@@ -1,16 +1,83 @@
 @extends('layout')
 @section('titulo', 'principal')
 @section('contenido')
-    <h1>{{$titulo}}</h1>
+    <h1><center>{{$titulo}}</center></h1>
 
     <br>
-    <div class="row">
+    <!-- Botón Modal CREAR EMPLEADO-->
+    <div class="container">
         <div class="col-sm-8 col-sm-offset-2">
-            <a href="#nuevo" class="btn btn-primary" data-toggle="modal"><i class="fas fa-user-plus"></i> Nuevo Registro</a>
+            <a class="btn btn-primary" data-toggle="modal" data-target="#crearEmpleadoModal"><i class="fas fa-user-plus"></i> Nuevo Registro</a>
         </div>
     </div>
+
+    <!-- Modal CREAR EMPLEADO-->
+    <div class="modal fade" id="crearEmpleadoModal" tabindex="-1" role="dialog" aria-labelledby="crearEmpleadoModal" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Crear Empleado</h5>
+                    <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>                        
+                </div>
+
+                <form action="{{route('empleadoGuardar')}}" method="post">
+                    <div class="modal-body">
+                        @csrf
+
+                        @if($errors->any())
+                            @foreach($errors->all() as $error)
+                                <p>{{$error}}</p>
+                            @endforeach
+                        @endif
+
+                        <div class="form-group">
+                            <label for="nombre">Nombre</label>
+                            <input type="text" class="form-control" name="nombre" id="nombre"  placeholder="Ingrese el nombre" value="{{old('nombre')}}">
+                            <small class="text-danger">{{$errors->first('nombre')}}</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="edad">Edad</label>
+                            <input type="number" class="form-control" name="edad" id="edad"  placeholder="Ingrese su edad" value="{{old('edad')}}">
+                            <small class="text-danger">{{$errors->first('edad')}}</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="direccion">Dirección</label>
+                            <textarea class="form-control" name="direccion" id="direccion" rows="2">{{old('direccion')}}</textarea>
+                            <small class="text-danger">{{$errors->first('direccion')}}</small>
+
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="text" class="form-control" id="email" name="email" placeholder="ingrese un email" value="{{old('email')}}">
+                            <small class="text-danger">{{$errors->first('correo')}}</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="idCargo">Cargo</label>
+                            <select class="form-control" name="idCargo" id="idCargo">
+                                @forelse($cargos as $cargo)
+                                    <option value="{{$cargo->id}}">{{$cargo->nombre}}</option>
+                                @empty
+                                    <option>No existen</option>
+                                @endforelse
+                            </select>
+
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        <button type="submit"  class="btn btn-primary">Guardar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- FIN Modal CREAR EMPLEADO-->
+    </div>
     <br>
-    <table class="table">
+    <div class= "container">
+
+       <table class="table">
         <thead>
         <tr>
             <th scope="col">#</th>
@@ -20,6 +87,7 @@
             <th scope="col">Acciones</th>
         </tr>
         </thead>
+        </div>
         <tbody>
         @forelse ($empleados as $empleado)
             <tr>

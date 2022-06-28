@@ -11,7 +11,7 @@ class EmpleadosController extends Controller
 {
     public function index(){
         $titulo = "Vista principal de empleados";
-        $empleados = Empleado::orderBy('id','asc')->paginate(5);
+        $empleados = Empleado::orderBy('id','desc')->paginate(5);
         $cargos = Cargo::all();
         return view('Empleados.index', compact('titulo', 'empleados', 'cargos'));
     }
@@ -27,9 +27,20 @@ class EmpleadosController extends Controller
         $titulo = "Vista de Mostrar de empleados";
         return view('Empleados.Mostrar');
     }
-
     public function guardar(){
-        return request();
+
+        $campos=request()->validate([
+            'nombre'=>'required|min:3',
+            'edad'=>'required',
+            'direccion'=>'required',
+            'email'=>'required|email',
+            'idCargo'=>'required'
+    
+        ]);
+        Empleado::create($campos);
+    
+        return redirect('empleados')->with('mensaje', 'Empleado Registrado');
+    
     }
 
     

@@ -43,5 +43,20 @@ class EmpleadosController extends Controller
     
     }
 
+    public function actualizar(Empleado $empleado){
+
+        $campos=request()->validate([
+            'nombre'=>'required|min:3',
+            'edad'=>'required',
+            'direccion'=>'required',
+            'email'=>'required|email',
+            'idCargo'=>'required'
+    
+        ]);
+        $empleado->update($campos);
+    
+        return redirect('empleados')->with('mensaje', 'Empleado actualizado');
+    }
+
     
 }

@@ -1,6 +1,29 @@
 @extends('layout')
 @section('titulo', 'principal')
 @section('contenido')
+
+
+@section('scripts')
+
+        @if (session('mensaje'))
+        <script>
+            Swal.fire(
+                //'El empleado se guardó con éxito!',
+                "{{ session('mensaje') }}",
+                'Presione el boton ok para cerrar!',
+                'success'
+            )
+        </script>
+    @endif
+
+    @if($errors->any())
+    <script>
+        $(document).ready(function(){
+            $('#crearEmpleadoModal').modal('show')
+        })
+    </script>
+    @endif
+@endsection
     <h1><center>{{$titulo}}</center></h1>
 
     <br>
@@ -74,15 +97,38 @@
     </div>
     <!-- FIN Modal CREAR EMPLEADO-->
     </div>
-    <br>
+
+    @section('scripts')
 
 @if (session('mensaje'))
-    <div class="alert alert-warning">
-        {{ session('mensaje') }}
-    </div>
+<script>
+    Swal.fire(
+        'El empleado se guardó con éxito!',
+        'Presione el boton ok para cerrar!',
+        'success'
+    )
+</script>
 @endif
 
-<br>
+@if($errors->any())
+
+<script>
+Swal.fire({
+  icon: 'error',
+  title: 'Oops...',
+  text: 'Registro no Guardado',
+  footer: ''
+})
+</script>
+<script>
+$(document).ready(function(){
+    $('#crearEmpleadoModal').modal('show')
+})
+</script>
+@endif
+@endsection
+
+
     <div class= "container">
 
        <table class="table">
@@ -105,14 +151,134 @@
                 <td>{{$empleado->cargoEmpleado->nombre}}</td>
                 <td>
                     <form action="#" method="post">
-                        <a href="#"><i class="fas fa-info-circle fa-lg text-success"></i></a>
-                        <a href="#"><i class="fas fa-user-edit fa-lg" style="margin-left: 20px; margin-right: 20px;"></i></a>
-
+                    <a href="#mostrarEmpleado{{$empleado->id}}" data-toggle="modal" data-target="#mostrarEmpleado{{$empleado->id}}"><i class="fas fa-info-circle fa-lg text-success"></i></a>
+                    <a href="#editarEmpleado{{$empleado->id}}" data-toggle="modal" data-target="#editarEmpleado{{$empleado->id}}" style="margin-left: 20px; margin-right: 20px;"><i class="fas fa-user-edit fa-lg"></i></a>
                         @csrf @method('DELETE')
                         <button type="submit " style="border: none"><i class="fas fa-trash-alt fa-lg text-danger"></i></button>
                     </form>
                 </td>
             </tr>
+          <!-- Modal MOSTRAR EMPLEADO-->
+
+          <div class="modal fade" id="mostrarEmpleado{{$empleado->id}}" tabindex="-1" role="dialog" aria-labelledby="mostrarEmpleado" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Mostrar Empleado</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+
+                        <form>
+                            <div class="modal-body">
+
+                                <div class="form-group">
+                                    <label for="nombre">Nombre</label>
+                                    <input type="text" class="form-control" name="nombre" id="nombre"  placeholder="Ingrese el nombre" value="{{old('nombre', $empleado->nombre)}}">
+                                    <small class="text-danger">{{$errors->first('nombre')}}</small>
+                                </div>
+                                <div class="form-group">
+                                    <label for="edad">Edad</label>
+                                    <input type="number" class="form-control" name="edad" id="edad"  placeholder="Ingrese su edad" value="{{old('edad', $empleado->edad)}}">
+                                    <small class="text-danger">{{$errors->first('edad')}}</small>
+                                </div>
+                                <div class="form-group">
+                                    <label for="direccion">Dirección</label>
+                                    <textarea class="form-control" name="direccion" id="direccion" rows="2">{{old('direccion', $empleado->direccion)}}</textarea>
+                                    <small class="text-danger">{{$errors->first('direccion')}}</small>
+
+                                </div>
+                                <div class="form-group">
+                                    <label for="email">Email</label>
+                                    <input type="text" class="form-control" id="email" name="email" placeholder="ingrese un email" value="{{old('email', $empleado->email)}}">
+                                    <small class="text-danger">{{$errors->first('correo')}}</small>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="cargo">Cargo</label>
+                                    <input type="text" class="form-control" id="cargo" name="cargo" placeholder="ingrese un email" value="{{old('email', $empleado->cargoEmpleado->nombre)}}">
+                                    <small class="text-danger">{{$errors->first('correo')}}</small>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- FIN Modal MOSTRAR EMPLEADO-->
+
+            <!-- Modal Editar EMPLEADO-->
+
+<div class="modal fade" id="editarEmpleado{{$empleado->id}}" tabindex="-1" role="dialog" aria-labelledby="editarEmpleado" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Editar Empleado</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <form action="{{route('empleadoActualizar', $empleado)}}" method="post">
+                <div class="modal-body">
+                    @csrf @method('PUT')
+
+                    @if($errors->any())
+                        @foreach($errors->all() as $error)
+                            <p>{{$error}}</p>
+                        @endforeach
+                    @endif
+
+
+                    <div class="form-group">
+                        <label for="nombre">Nombre</label>
+                        <input type="text" class="form-control" name="nombre" id="nombre"  placeholder="Ingrese el nombre" value="{{old('nombre', $empleado->nombre)}}">
+                        <small class="text-danger">{{$errors->first('nombre')}}</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="edad">Edad</label>
+                        <input type="number" class="form-control" name="edad" id="edad"  placeholder="Ingrese su edad" value="{{old('edad', $empleado->edad)}}">
+                        <small class="text-danger">{{$errors->first('edad')}}</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="direccion">Dirección</label>
+                        <textarea class="form-control" name="direccion" id="direccion" rows="2">{{old('direccion', $empleado->direccion)}}</textarea>
+                        <small class="text-danger">{{$errors->first('direccion')}}</small>
+
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="text" class="form-control" id="email" name="email" placeholder="ingrese un email" value="{{old('email', $empleado->email)}}">
+                        <small class="text-danger">{{$errors->first('correo')}}</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="idCargo">Cargo</label>
+                        <select class="form-control" name="idCargo" id="idCargo">
+                            @forelse($cargos as $cargo)
+                                <option value="{{$cargo->id}}" {{$cargo->id==$empleado->idCargo? 'selected':''}}>{{$cargo->nombre}}</option>
+                            @empty
+                                <option>No existen</option>
+                            @endforelse
+                        </select>
+                    </div>
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="submit"  class="btn btn-primary">Actualizar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- FIN Modal Editar EMPLEADO-->
+
+
         @empty
             No hay empleados
         @endforelse
@@ -122,7 +288,19 @@
         {{ $empleados->links() }}
     </div>
 
-    @section('scripts')
+   @section('scripts')
+
+        @if (session('mensaje'))
+        <script>
+            Swal.fire(
+                //'El empleado se guardó con éxito!',
+                '{{ session('mensaje') }}',
+                'Presione el boton ok para cerrar!',
+                'success'
+            )
+        </script>
+    @endif
+
     @if($errors->any())
     <script>
         $(document).ready(function(){
@@ -131,4 +309,3 @@
     </script>
     @endif
 @endsection
-@endsection()

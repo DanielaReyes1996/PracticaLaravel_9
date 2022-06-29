@@ -21,3 +21,4 @@ Route::get('empleados/editar', [EmpleadosController::class, 'editar'])->name('em
 
 
 Route::post('empleados', [EmpleadosController::class, 'guardar'])->name('empleadoGuardar');
+Route::put('empleados/{empleado}', [EmpleadosController::class, 'actualizar'])->name('empleadoActualizar');//RUTA PARA ACTUALIZAR
